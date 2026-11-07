@@ -1,0 +1,370 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color: #29332b;
+  background: #f6f3eb;
+  line-height: 1.6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.container {
+  width: min(100% - 2rem, 66rem);
+  margin-inline: auto;
+}
+
+.site-header {
+  background: #f9f9f7;
+  color: #102e23;
+  border-bottom: 1px solid #dde1da;
+}
+
+.header-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding-block: 1rem;
+}
+
+.site-logo {
+  display: block;
+  width: clamp(9.5rem, 48vw, 17rem);
+  max-width: 100%;
+  height: auto;
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.2em;
+}
+
+a:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 4px;
+}
+
+
+h1, h2 {
+  font-family: Georgia, serif;
+  line-height: 1.1;
+  color: #233c2c;
+}
+
+h1 {
+  max-width: 14ch;
+  margin: 0;
+  font-size: clamp(2.25rem, 7vw, 4.75rem);
+}
+
+.button {
+  display: inline-block;
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.5rem;
+  background: #233c2c;
+  color: #fffaf0;
+  font-weight: 700;
+}
+
+.button:focus-visible {
+  outline-color: #233c2c;
+}
+
+.library {
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  margin-bottom: 3rem;
+  border: 1px solid #c9d1c2;
+  border-radius: 1rem;
+  background: #fffcf6;
+}
+
+.library h2 {
+  margin-top: 0;
+}
+
+.library p {
+  max-width: 60ch;
+  margin-bottom: 0;
+}
+
+.exercise-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  align-items: start;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.exercise-filters label {
+  display: grid;
+  gap: 0.25rem;
+  font-weight: 700;
+}
+
+.exercise-filters select {
+  width: 100%;
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: 0.5rem;
+  border: 1px solid #758372;
+  border-radius: 0.5rem;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-weight: 400;
+}
+
+.exercise-filters :focus-visible {
+  outline: 2px solid #233c2c;
+  outline-offset: 2px;
+}
+
+.admin-form {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 24rem;
+}
+
+.admin-form label {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.admin-form input,
+.admin-form textarea,
+.admin-exercises select {
+  min-width: 0;
+  padding: 0.5rem;
+  border: 1px solid #758372;
+  border-radius: 0.5rem;
+  font: inherit;
+}
+
+.admin-exercises {
+  margin-top: 1.5rem;
+}
+
+.instruction-steps li + li {
+  margin-top: 0.5rem;
+}
+
+.instruction-steps textarea {
+  width: 100%;
+  vertical-align: top;
+}
+
+.sketch-editor {
+  min-width: 0;
+  margin: 0;
+  border: 1px solid #c9d1c2;
+  border-radius: 0.75rem;
+}
+
+.sketch-actions,
+.sketch-tools,
+.exercise-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.sketch-actions {
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid #c7cebf;
+}
+
+.sketch-tools {
+  margin-top: 0.55rem;
+  align-items: center;
+}
+
+.sketch-tool-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.sketch-actions button,
+.sketch-tools button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid #758372;
+  border-radius: 0.4rem;
+  color: inherit;
+  background: #fff;
+}
+
+.sketch-actions button:disabled {
+  opacity: 0.55;
+}
+
+.sketch-actions button[aria-pressed="true"],
+.sketch-tools button[aria-pressed="true"] {
+  background: #233c2c;
+  color: #fffaf0;
+}
+
+.sketch-tools button[aria-pressed="true"] > svg {
+  background: #fffaf0;
+  border-radius: 0.25rem;
+}
+
+.sketch-editor .sketch-surface {
+  margin-top: 0.75rem;
+  touch-action: none;
+  user-select: none;
+  cursor: crosshair;
+}
+
+.sketch-handle {
+  cursor: grab;
+}
+
+.admin-exercises > label {
+  display: grid;
+  gap: 0.25rem;
+  max-width: 24rem;
+  margin-bottom: 0.75rem;
+}
+
+.admin-panel button {
+  justify-self: start;
+  margin-top: 0.5rem;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.exercise-results {
+  font-size: 0.95rem;
+}
+
+.exercise-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.exercise-card {
+  padding: 1rem;
+  border: 1px solid #c9d1c2;
+  border-radius: 0.75rem;
+}
+
+.exercise-meta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.exercise-meta p {
+  margin-top: 0;
+}
+
+.exercise-category {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.exercise-card h3 {
+  margin: 0.35rem 0 0.6rem;
+  font-family: Georgia, serif;
+  font-size: 1.35rem;
+  line-height: 1.25;
+  color: #233c2c;
+}
+
+.exercise-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.favorite-button {
+  display: grid;
+  place-items: center;
+  flex: 0 0 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #233c2c;
+  cursor: pointer;
+}
+
+.favorite-button::before,
+.favorite-button > svg {
+  grid-area: 1 / 1;
+}
+
+.favorite-button::before {
+  content: '';
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #c9d1c2;
+  border-radius: 50%;
+}
+
+.favorite-button:is(:hover, [aria-pressed="true"])::before {
+  border-color: #a75860;
+  background: #f7e9e9;
+}
+
+.favorite-button:is(:hover, [aria-pressed="true"]) {
+  color: #903847;
+}
+
+.favorite-button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.exercise-card .exercise-difficulty {
+  flex-shrink: 0;
+  padding: 0.1rem 0.45rem;
+  border-radius: 0.5rem;
+  background: #eef1e9;
+  color: #505b50;
+  font-size: 0.75rem;
+}
+
+.exercise-card article li {
+  max-width: 62ch;
+  margin-bottom: 0.4rem;
+}
+
+.exercise-sketch {
+  max-width: 32rem;
+  margin: 0;
+}
+
+.exercise-sketch > svg {
+  display: block;
+  width: 100%;
+  border-radius: 0.75rem;
+  background: #dfe8d8;
+  color: #233c2c;
+}
+
+.exercise-sketch figcaption {
+  margin-top: 0.75rem;
+}

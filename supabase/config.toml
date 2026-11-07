@@ -1,0 +1,4 @@
+project_id = "apportera"
+
+[functions.improve-instructions]
+verify_jwt = false
