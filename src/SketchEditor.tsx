@@ -1,4 +1,4 @@
-import { useRef, useState, type PointerEvent } from 'react'
+import { useRef, useState, type Dispatch, type PointerEvent, type SetStateAction } from 'react'
 import { ExerciseSketch, type Sketch, type SketchTarget } from './ExerciseSketch'
 import { ditchWidth, handlerAndDogLabel, SketchSymbol, terrainTools } from './SketchSymbol'
 
@@ -16,8 +16,7 @@ function coordinates(event: PointerEvent<SVGSVGElement>, horizontalMargin = 20) 
   return [Math.round(Math.max(horizontalMargin, Math.min(320 - horizontalMargin, point.x))), Math.round(Math.max(15, Math.min(165, point.y)))]
 }
 
-export function SketchEditor({ initialSketch }: { initialSketch?: Sketch | null }) {
-  const [sketch, setSketch] = useState<Sketch>(initialSketch ?? { caption: '', points: [], arrows: [] })
+export function SketchEditor({ sketch, setSketch }: { sketch: Sketch; setSketch: Dispatch<SetStateAction<Sketch>> }) {
   const [tool, setTool] = useState<Tool>('Flytta')
   const [arrowStart, setArrowStart] = useState<number[] | null>(null)
   const [selected, setSelected] = useState<SketchTarget | null>(null)
@@ -98,7 +97,7 @@ export function SketchEditor({ initialSketch }: { initialSketch?: Sketch | null 
     }
     const previous = history.current.pop()
     if (!previous) return
-    setSketch((current) => ({ ...previous, caption: current.caption }))
+    setSketch(previous)
     setSelected(null)
   }
 
@@ -142,7 +141,7 @@ export function SketchEditor({ initialSketch }: { initialSketch?: Sketch | null 
         {isArrowTool && (arrowStart ? 'Tryck där pilen ska sluta.' : 'Tryck där pilen ska börja.')}
         {tool !== 'Flytta' && !isArrowTool && 'Tryck på träningsytan för att placera symbolen.'}
       </p>
-      <ExerciseSketch sketch={{ ...sketch, caption: '' }} onGrab={grab} selected={selected} svgProps={{
+      <ExerciseSketch sketch={sketch} onGrab={grab} selected={selected} svgProps={{
         role: 'img',
         'aria-label': 'Träningsyta',
         className: 'sketch-surface',
@@ -150,11 +149,6 @@ export function SketchEditor({ initialSketch }: { initialSketch?: Sketch | null 
         onPointerMove: move,
         onLostPointerCapture: () => { drag.current = null },
       }} />
-      <label>
-        Bildtext (valfritt)
-        <input value={sketch.caption} onChange={(event) => setSketch({ ...sketch, caption: event.target.value })} />
-      </label>
-      <input type="hidden" name="sketch" value={JSON.stringify(sketch)} />
     </fieldset>
   )
 }

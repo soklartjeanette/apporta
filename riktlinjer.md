@@ -1,4 +1,4 @@
-# APPORTERA MERA – PROJEKTRIKTLINJER
+# APPORTA – PROJEKTRIKTLINJER
 
 ## Bakgrund och mål
 
@@ -6,11 +6,11 @@ Jag går en kurs i AI-driven programmering av webbappar på Folkuniversitetet.
 
 Mitt projekt är att utveckla en webbapp för jaktapportering med retriever.
 
-Appens namn är **Apportera mera**. Använd det konsekvent i gränssnitt, sidtitel och dokumentation. **Din digitala övningsbank** kan användas som undertitel.
+Projektet och projektmappen ska heta **Apporta**. Använd namnet konsekvent i gränssnitt, sidtitel och dokumentation. Använd Apportas logotyp med hunden och den röda apporten. **Din digitala övningsbank** kan användas som undertitel.
 
 Prioritera korta namn och webbadresser som faller naturligt i tal och är lätta att komma ihåg efter att ha hört dem en gång.
 
-Överväg **apporteramera.se** som domän inför publicering. Kontrollera tillgängligheten på nytt när det blir aktuellt.
+Välj en domän för Apporta inför publicering och kontrollera att den är ledig.
 
 Appen ska samla träningsövningar inom jaktapportering och göra det enkelt att hitta inspiration, förstå hur övningar genomförs och skapa egna övningar med text och skisser.
 
@@ -21,10 +21,11 @@ Målet är att bygga en användarvänlig och professionell webbapp som kan utvec
 - Appen ska vara en övningsbank, INTE en träningsdagbok.
 - Användaren ska inte behöva registrera träningspass, resultat eller utveckling.
 - Varje övning ska innehålla både text och en pedagogisk skiss.
-- Visa kategori, titel, svårighetsgrad, stegvisa instruktioner och skiss direkt i övningskortet. Utelämna kort beskrivning och separat utrustningsavsnitt. Övningens titel är en rubrik.
+- Visa kategori, titel, skiss och stegvisa instruktioner direkt i övningskortet. Utelämna kort beskrivning och separat utrustningsavsnitt. Övningens titel är en rubrik.
 - Visa tre övningskort i rad på breda skärmar och färre per rad när utrymmet är begränsat.
-- Visa svårighetsgraden som en liten, diskret etikett i övre högra hörnet av varje övningskort.
+- Lägg skissen ovanför den numrerade instruktionslistan. Använd ingen bildtext och ingen svårighetsgrad i övningarna.
 - Visa instruktioner och skisser direkt i korten utan underrubrikerna ”Gör så här” och ”Skiss”.
+- Låt administratören lägga till en frivillig påminnelse i fältet **Noteringar om detta steg** för varje instruktionssteg. Visa den kursivt direkt under stegets instruktion, inom samma numrerade punkt. Använd den för särskilt viktiga detaljer, till exempel att hunden ska gå fot när föraren går fram.
 - Appen ska vara enkel att använda även för personer utan tekniska kunskaper.
 - Den ska fungera på mobil, surfplatta och dator.
 - Börja enkelt och bygg ut funktionerna successivt. Använd ett fåtal exempelövningar under utvecklingen och sikta på cirka 20–30 övningar på längre sikt.
@@ -42,21 +43,22 @@ Endast jag ska kunna:
 - Publicera och avpublicera övningar.
 
 Besökare ska kunna:
-- Filtrera bland publicerade övningar på kategori, svårighetsgrad och kast. Använd rubriken ”Övningar med eller utan kast” och valen ”Med kast” och ”Utan kast”.
-- Kastfiltret utgår från övningens kategori. Markering samt Dirigering och linjetag hör till ”Med kast”. Ringträning samt Stadga och passivitet hör till ”Utan kast”.
+- Filtrera bland publicerade övningar på kategori. Visa inget kastfilter.
 - Läsa instruktioner.
 - Se skisser.
 
-Besökare ska inte behöva logga in.
+Besökare ska inte behöva logga in för att läsa övningar eller spara favoriter.
 
 På längre sikt kan appen utvecklas så att andra användare kan skapa och dela egna övningar. Detta ska inte ingå i första versionen.
 
 ## Övningar
 
-- Kalla avsnittet och menylänken **Övningar**. Lägg **Alla rutor** och **Mina rutor** i samma rullista och förvälj **Alla rutor**. Förvälj **Med och utan kast**, **Alla kategorier** och **Alla svårighetsgrader** i de publika filtren.
-- Ge favorithjärtat en diskret, mindre ring och lämna luft till svårighetsetiketten. Behåll ett tydligt hjärta och en generös tryckyta på mobilen.
+- Kalla avsnittet och menylänken **Övningar**. Lägg **Alla rutor** och **Mina rutor** i rullistan **Visa** och förvälj **Alla rutor**. Förvälj **Alla kategorier** i kategorifiltret.
+- Ge favorithjärtat en liten symbol och en diskret ring, båda i klarrött (#F00030). Använd en tydligt ljusorange bakgrund (#FFD1AB) vid markering och hovring. Behåll en generös tryckyta på mobilen.
 - Besökare ska kunna spara valfria publicerade rutor som favoriter genom att trycka på ett hjärta, oavsett vem som har skapat övningen. Ett fyllt hjärta visar att rutan är sparad. Tryck igen för att ta bort favoriten.
 - **Mina rutor** visar besökarens sparade, publicerade rutor. Favoriter sparas i den aktuella webbläsaren utan konto i första versionen. Filtren i **Alla rutor** påverkar inte **Mina rutor**.
+
+- Visa **Notering** på publicerade övningar. Visa *Jag har inte gjort några noteringar om denna övning.* i kursiv stil för inloggade som saknar en notering. Visa *När jag är inloggad ser jag mina noteringar om övningen här.* för utloggade. Visa sparade noteringar direkt på kortet utan att användaren behöver fälla ut dem. Varje notering tillhör den som skriver den och ska endast kunna läsas, ändras eller tas bort av det kontot.
 
 Övningarna ska kunna organiseras i följande kategorier:
 
@@ -68,15 +70,10 @@ På längre sikt kan appen utvecklas så att andra användare kan skapa och dela
 - Vattenarbete
 - Ringträning
 
-Svårighetsgrader:
-- Nybörjare
-- Fortsättning
-- Avancerad
 
 Varje övning ska kunna innehålla:
 - Namn
 - Kategori
-- Svårighetsgrad
 - Kort beskrivning
 - Utrustning som behövs
 - Instruktioner steg för steg
@@ -90,6 +87,10 @@ Varje övning ska kunna innehålla:
 Jag ska kunna skapa en övning via ett enkelt formulär.
 
 Jag ska kunna skriva och ändra instruktionerna, skapa eller redigera en skiss och spara övningen.
+
+Samla titel, kategori, skiss och instruktioner under varandra i en redigeringskolumn. På breda skärmar ligger hela liveförhandsvisningen i en egen kolumn till höger. På smala skärmar ligger den under redigeraren. Använd samma kort som i övningsbanken och visa ändringar medan jag redigerar.
+
+Börja med tre tomma instruktionssteg för nya övningar. Visa **Instruktioner** och **Noteringar om detta steg** som hjälptexter inne i respektive tomt fält. Gör noteringsfältet lägre än instruktionsfältet ovanför.
 
 Jag ska även kunna spara en övning som utkast innan den publiceras.
 
@@ -150,7 +151,11 @@ Grundfunktionerna ska fungera utan AI. Inför AI-funktionerna när grundappen fu
 
 Använd den valda hundlogotypen i sidhuvudet mot en ljus bakgrund. Behåll originalfilens utseende, transparens och proportioner. Anpassa visningsstorleken för mobil och dator.
 
-Färgriktning för nya startsidan: kombinera djup jaktgrön (#102E23) med klar flanellröd (#F00030). Prova rött i en större färgyta och i en tydlig detalj i logotypen. Använd nästan vit bakgrund (#F9F9F7), vita kort och nästan svart text (#171C18).
+Färgschema för startsidan och övningsbanken: kombinera djup jaktgrön (#102E23) med klar flanellröd (#F00030). Prova rött i en större färgyta och i en tydlig detalj i logotypen. Använd nästan vit bakgrund (#F9F9F7), vita kort och nästan svart text (#171C18).
+
+Ge övningsvyn, korten och noteringarna samma sportiga uttryck som startsidan: kraftiga rubriker utan seriffer, rena färgytor, klarröda accenter och generöst med luft.
+
+Ge tydligt mellanrum mellan skissen, instruktionerna och noteringsrutan. Håll ihop noteringsrubriken och texten under den. Låt kort med kortare innehåll behålla sin naturliga höjd.
 
 Bedöm storlek, linjering och mellanrum tillsammans från början när du lägger till eller ändrar en komponent. Se hur den samspelar med närliggande rubriker, etiketter och knappar på smala och breda skärmar. Låt gärna tryckytan vara större än den synliga knappen.
 
@@ -158,11 +163,7 @@ Startsidan har en bred öppning med jaktapportering, följd av ”Så funkar det
 
 Appen ska ha en modern, stilren och naturnära design.
 
-Färgförslag:
-- Mörkgrönt
-- Salviagrönt
-- Beige och andra ljusa naturtoner
-- Mörkgrå text
+Behåll en ljus salviagrön träningsyta så att skissens symboler syns tydligt.
 
 Designen ska kännas professionell, pedagogisk och lättanvänd.
 

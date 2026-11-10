@@ -1,48 +1,80 @@
 import { useEffect, useState } from 'react'
+import type { Session } from '@supabase/supabase-js'
 import { createRoot } from 'react-dom/client'
 import { AdminLogin } from './AdminLogin'
-import logo from './assets/apportera-mera-logotyp.png'
+import logo from './assets/apporta-logotyp.png'
 import { ExerciseDetail } from './ExerciseDetail'
 import { HomePage } from './HomePage'
 import { exercises } from './exercises'
 import { hasSupabaseConfig, loadExercises, type PublishedExercise } from './loadExercises'
+import { client } from './supabaseClient'
 import './styles.css'
 
-const throwTypeByCategory = new Map([
-  ['Markering', 'med-kast'],
-  ['Dirigering och linjetag', 'med-kast'],
-  ['Ringträning', 'utan-kast'],
-  ['Stadga och passivitet', 'utan-kast'],
-])
-
-const favoritesKey = 'apportera-mera:favorites'
+const favoritesKey = 'apporta:favorites'
+const legacyFavoritesKey = 'apportera-mera:favorites'
 const exerciseHashes = ['#ovningar', '#ovningsbanken', '#alla-rutor', '#mina-rutor']
 
 function readFavorites(): string[] {
   try {
-    const stored: unknown = JSON.parse(window.localStorage.getItem(favoritesKey) ?? '[]')
+    const savedFavorites = window.localStorage.getItem(favoritesKey)
+      ?? window.localStorage.getItem(legacyFavoritesKey)
+    const stored: unknown = JSON.parse(savedFavorites ?? '[]')
     return Array.isArray(stored) ? stored.filter((id): id is string => typeof id === 'string') : []
   } catch {
     return []
   }
 }
 
-function ExerciseList({ items, favoriteIds, onFavorite }: {
+function ExerciseList({ items, favoriteIds, onFavorite, userId, checkingAccount }: {
   items: PublishedExercise[]
   favoriteIds: string[]
   onFavorite: (id: string) => void
+  userId?: string
+  checkingAccount: boolean
 }) {
+  const [notes, setNotes] = useState<Map<string, string> | null>()
+  const [noteAttempt, setNoteAttempt] = useState(0)
+  useEffect(() => {
+    if (!client || !userId) return
+    const db = client
+    const controller = new AbortController()
+    async function loadNotes() {
+      try {
+        const { data, error } = await db.from('exercise_notes').select('exercise_id,note')
+          .eq('user_id', userId).abortSignal(controller.signal)
+        if (controller.signal.aborted) return
+        if (error) throw error
+        setNotes(new Map(data.map(({ exercise_id, note }) => [exercise_id, note])))
+      } catch {
+        if (!controller.signal.aborted) setNotes(null)
+      }
+    }
+    void loadNotes()
+    return () => controller.abort()
+  }, [userId, noteAttempt])
+
   if (items.length === 0) return null
 
   return (
+    <>
+    {notes === null && <div className="note-retry">
+      <p role="alert">Dina noteringar kunde inte hämtas just nu.</p>
+      <button className="note-edit" type="button" onClick={() => {
+        setNotes(undefined)
+        setNoteAttempt((attempt) => attempt + 1)
+      }}>Försök igen</button>
+    </div>}
     <ul className="exercise-list" role="list">
       {items.map((exercise) => (
         <li className="exercise-card" key={exercise.id}>
           <ExerciseDetail exercise={exercise} favorite={favoriteIds.includes(exercise.id)}
-            onFavorite={() => onFavorite(exercise.id)} />
+            onFavorite={() => onFavorite(exercise.id)} userId={userId} checkingAccount={checkingAccount}
+            note={notes ? notes.get(exercise.id) ?? '' : notes}
+            onNoteSave={(note) => setNotes((current) => new Map(current).set(exercise.id, note))} />
         </li>
       ))}
     </ul>
+    </>
   )
 }
 
@@ -50,19 +82,28 @@ function App() {
   const [hash, setHash] = useState(() => window.location.hash)
   const isExerciseView = exerciseHashes.includes(hash)
   const isAdminView = hash === '#admin' && hasSupabaseConfig
-  const isHome = !isExerciseView && !isAdminView
+  const isAccountView = hash === '#logga-in' && hasSupabaseConfig
+  const isHome = !isExerciseView && !isAdminView && !isAccountView
+  const [session, setSession] = useState<Session | null>(null)
+  const [loadingSession, setLoadingSession] = useState(Boolean(client))
   const [exerciseVersion, setExerciseVersion] = useState(0)
   const [availableExercises, setAvailableExercises] = useState<PublishedExercise[]>(
     hasSupabaseConfig ? [] : exercises
   )
   const [loadStatus, setLoadStatus] = useState(hasSupabaseConfig ? 'loading' : 'ready')
   const [showFavorites, setShowFavorites] = useState(window.location.hash === '#mina-rutor')
-  const [throwType, setThrowType] = useState('')
   const [category, setCategory] = useState('')
-  const [difficulty, setDifficulty] = useState('')
   const [favoriteIds, setFavoriteIds] = useState(readFavorites)
   const [favoriteStorageError, setFavoriteStorageError] = useState(false)
   const favorites = availableExercises.filter((exercise) => favoriteIds.includes(exercise.id))
+
+  useEffect(() => {
+    const listener = client?.auth.onAuthStateChange((_event, nextSession) => {
+      setSession(nextSession)
+      setLoadingSession(false)
+    })
+    return () => listener?.data.subscription.unsubscribe()
+  }, [])
 
   function toggleFavorite(id: string) {
     const next = favoriteIds.includes(id)
@@ -78,11 +119,8 @@ function App() {
   }
 
   const categories = [...new Set([...availableExercises.map((exercise) => exercise.category), 'Ringträning'])]
-  const difficulties = [...new Set(availableExercises.map((exercise) => exercise.difficulty))]
   const matches = availableExercises.filter((exercise) =>
-    (!throwType || throwTypeByCategory.get(exercise.category) === throwType) &&
-    (!category || exercise.category === category) &&
-    (!difficulty || exercise.difficulty === difficulty)
+    (!category || exercise.category === category)
   )
   useEffect(() => {
     if (!hasSupabaseConfig) return
@@ -118,10 +156,13 @@ function App() {
     <>
       <header className="site-header">
         <div className="container header-content">
-          <a href="#start"><img className="site-logo" src={logo} alt="Apportera mera – startsida" width={2172} height={724} /></a>
+          <a href="#start"><img className="site-logo" src={logo} alt="Apporta – startsida" width={2172} height={724} /></a>
           <nav className="site-nav" aria-label="Huvudmeny">
             <a href="#ovningar" aria-current={isExerciseView ? 'page' : undefined}>Övningar</a>
             <a href="#sa-funkar-det">Så funkar det</a>
+            {hasSupabaseConfig && <a href="#logga-in" aria-current={isAccountView ? 'page' : undefined}>
+              {session ? 'Mitt konto' : 'Logga in'}
+            </a>}
           </nav>
         </div>
       </header>
@@ -131,40 +172,26 @@ function App() {
         {favoriteStorageError && <p role="alert">Webbläsaren kunde inte spara dina favoriter. De finns kvar tills du laddar om sidan.</p>}
 
         <section className="library" id="ovningar" aria-labelledby="bankrubrik">
-          <h1 id="bankrubrik" tabIndex={-1}>Övningar</h1>
+          <div className="library-hero">
+            <p className="home-eyebrow">Din digitala övningsbank</p>
+            <h1 id="bankrubrik" tabIndex={-1}>Övningar</h1>
+          </div>
           <div className="exercise-filters">
             <label>
-              Visa rutor
+              Visa
               <select value={showFavorites ? 'mina' : 'alla'} onChange={(event) => setShowFavorites(event.target.value === 'mina')}>
                 <option value="alla">Alla rutor</option>
                 <option value="mina">Mina rutor</option>
               </select>
             </label>
-          </div>
-          {!showFavorites && <div className="exercise-filters" role="group" aria-label="Filtrera övningar">
-            <label>
-              Övningar med eller utan kast
-              <select value={throwType} onChange={(event) => setThrowType(event.target.value)}>
-                <option value="">Med och utan kast</option>
-                <option value="med-kast">Med kast</option>
-                <option value="utan-kast">Utan kast</option>
-              </select>
-            </label>
-            <label>
+            {!showFavorites && <label>
               Kategori
               <select value={category} onChange={(event) => setCategory(event.target.value)}>
                 <option value="">Alla kategorier</option>
                 {categories.map((option) => <option key={option}>{option}</option>)}
               </select>
-            </label>
-            <label>
-              Svårighetsgrad
-              <select value={difficulty} onChange={(event) => setDifficulty(event.target.value)}>
-                <option value="">Alla svårighetsgrader</option>
-                {difficulties.map((option) => <option key={option}>{option}</option>)}
-              </select>
-            </label>
-          </div>}
+            </label>}
+          </div>
           <p className="exercise-results" role="status">
             {loadStatus === 'loading' && 'Laddar övningar…'}
             {loadStatus === 'error' && 'Övningarna kunde inte hämtas. Ladda om sidan för att försöka igen.'}
@@ -176,16 +203,16 @@ function App() {
               ? 'Inga övningar matchar. Prova att ändra filtren.'
               : `Visar ${matches.length} av ${availableExercises.length} övningar.`)}
           </p>
-          <ExerciseList items={showFavorites ? favorites : matches} favoriteIds={favoriteIds} onFavorite={toggleFavorite} />
+          <ExerciseList key={session?.user.id ?? 'guest'} items={showFavorites ? favorites : matches} favoriteIds={favoriteIds}
+            onFavorite={toggleFavorite} userId={session?.user.id} checkingAccount={loadingSession} />
         </section>
         </>}
-        {hasSupabaseConfig && <div hidden={!isAdminView}>
-          <AdminLogin onExerciseSave={() => setExerciseVersion((version) => version + 1)} />
-        </div>}
+        {(isAdminView || isAccountView) && <AdminLogin session={session} loading={loadingSession}
+          showAdmin={isAdminView} onExerciseSave={() => setExerciseVersion((version) => version + 1)} />}
       </main>
       <footer className="site-footer">
         <div className="container footer-content">
-          <a href="#start">Apportera mera</a>
+          <a href="#start">Apporta</a>
           <nav className="site-nav" aria-label="Sidfot">
             <a href="#ovningar">Övningar</a>
             <a href="#sa-funkar-det">Så funkar det</a>

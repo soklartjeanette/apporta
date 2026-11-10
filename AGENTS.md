@@ -1,8 +1,10 @@
-# AGENTS.md – Apportera mera
+# AGENTS.md – Apporta
 
 ## Projekt
 
-Apportera mera är en digital övningsbank för jaktapportering med retriever. Besökare kan filtrera och läsa publicerade övningar med instruktioner och skisser utan inloggning. I första versionen är Jeanette ensam administratör. Läs [riktlinjer.md](riktlinjer.md) för produktkraven och avgränsningen.
+Apporta är en digital övningsbank för jaktapportering med retriever. Besökare kan filtrera och läsa publicerade övningar med instruktioner och skisser utan inloggning. I första versionen är Jeanette ensam administratör. Läs [riktlinjer.md](riktlinjer.md) för produktkraven och avgränsningen.
+
+Läs [FRAMTIDSPLAN.md](FRAMTIDSPLAN.md) och ta hänsyn till den vid större tekniska beslut. Följ den nuvarande utvecklingsplanen och be Jeanette om uttryckligt godkännande innan arbete med framtidsfunktioner påbörjas.
 
 ## Roll och arbetssätt
 
@@ -28,7 +30,7 @@ Använd enkla, etablerade och välunderhållna bibliotek.
 
 ## Övningar och datamodell
 
-Varje övning ska ha ett unikt ID. Använd en tydlig datamodell som går att utöka. Den ska kunna lagra titel, kategori, svårighetsgrad, beskrivning, utrustning, stegvisa instruktioner, tips och variationer, ungefärlig tidsåtgång när den är relevant, skissdata, publiceringsstatus samt datum för skapande och senaste ändring. Stöd statusarna utkast och publicerad.
+Varje övning ska ha ett unikt ID. Använd en tydlig datamodell som går att utöka. Den ska kunna lagra titel, kategori, beskrivning, utrustning, stegvisa instruktioner, tips och variationer, ungefärlig tidsåtgång när den är relevant, skissdata, publiceringsstatus samt datum för skapande och senaste ändring. Stöd statusarna utkast och publicerad.
 
 ## Ritverktyg
 
@@ -39,7 +41,7 @@ Bygg en redigerbar träningsyta med hund, förare, apport och pil som första ve
 - Använd Row Level Security (RLS) för att ge administratören rätt att skapa, ändra och radera övningar. Besökare får endast läsa publicerade övningar. Skydda även utkast och avpublicerade övningar.
 - Använd miljövariabler för konfiguration. Lägg aldrig hemliga API-nycklar eller service role-nycklar i frontendkoden.
 - Kontrollera databasbehörigheterna innan publicering.
-- Förbered datamodellen för framtida användarkonton. Första versionen har enbart administratörsinloggning.
+- Förbered datamodellen för framtida användarkonton. Första versionen har enbart administratörskontot. Inloggade konton kan spara privata noteringar om publicerade övningar. Skydda noteringarna med ägarbaserad RLS i en separat tabell.
 
 ## Design
 
@@ -53,7 +55,7 @@ Kontrollera TypeScript-fel, kör byggkommandot och testa berörda och tidigare f
 
 1. Projektstruktur och startsida.
 2. Övningsbank med exempeldata.
-3. Filtrering efter kategori och svårighetsgrad.
+3. Filtrering efter kategori.
 4. Fullständiga instruktioner och skisser direkt i övningsbanken.
 5. Supabase och administratörsinloggning.
 6. Skapa, redigera och radera övningar. Hantera utkast, publicering och avpublicering.

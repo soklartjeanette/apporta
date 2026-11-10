@@ -3,7 +3,6 @@ export const exercises = [
     id: 'enkel-enkelmarkering',
     title: 'Enkelmarkering på öppen mark',
     category: 'Markering',
-    difficulty: 'Nybörjare',
     description:
       'Hunden ser en apport landa och tränar på att komma ihåg var den föll.',
     equipment: ['En dummy', 'En medhjälpare som kastar'],
@@ -13,7 +12,6 @@ export const exercises = [
       'Vänta tills hunden är lugn. Ge sedan din apport­signal och ta emot dummyn när hunden kommer tillbaka.',
     ],
     sketch: {
-      caption: 'Medhjälparen kastar åt sidan. Den streckade pilen visar kastet och den heldragna pilen visar hundens väg.',
       points: [
         { x: 65, y: 152, label: 'Förare + hund' },
         { x: 95, y: 38, label: 'Kastare' },
@@ -29,7 +27,6 @@ export const exercises = [
     id: 'linjetag-langs-en-stig',
     title: 'Linjetag längs en stig',
     category: 'Dirigering och linjetag',
-    difficulty: 'Fortsättning',
     description:
       'Hunden skickas rakt fram längs en stig till en apport som den har sett dig lägga ut.',
     equipment: ['En dummy'],
@@ -39,7 +36,6 @@ export const exercises = [
       'Skicka hunden rakt fram mot dummyn och ta emot den vid startpunkten.',
     ],
     sketch: {
-      caption: 'Pilen följer den raka stigen från startpunkten till apporten.',
       points: [
         { x: 65, y: 145, label: 'Förare + hund' },
         { x: 245, y: 45, label: 'Apport' },
@@ -53,7 +49,6 @@ export const exercises = [
     id: 'stadga-nar-en-annan-hund-arbetar',
     title: 'Stadga när en annan hund arbetar',
     category: 'Stadga och passivitet',
-    difficulty: 'Avancerad',
     description:
       'Hunden tränar på att sitta lugnt vid din sida medan en annan hund hämtar en apport.',
     equipment: ['En dummy', 'En medhjälpare med en apporterande hund'],
@@ -63,7 +58,6 @@ export const exercises = [
       'Belöna att din hund väntar lugnt. Öka avståndet till arbetslinjen om hunden har svårt att sitta kvar.',
     ],
     sketch: {
-      caption: 'Den väntande hunden sitter med sin förare vid sidan av den arbetande hundens väg.',
       points: [
         { x: 82, y: 148, label: 'Förare + väntande hund' },
         { x: 80, y: 46, label: 'Arbetande hund' },

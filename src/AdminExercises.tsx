@@ -1,21 +1,22 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { useEffect, useState, type FormEvent } from 'react'
+import { ExerciseDetail } from './ExerciseDetail'
 import { InstructionEditor } from './InstructionEditor'
 import { SketchEditor } from './SketchEditor'
 import type { Sketch } from './ExerciseSketch'
+import { readStep, writeStep } from './instructionSteps'
+import type { PublishedExercise } from './loadExercises'
 
 const categories = [
   'Markering', 'Dirigering och linjetag', 'Sök och närsök',
   'Stadga och passivitet', 'Stoppsignal', 'Vattenarbete', 'Ringträning',
 ]
-const difficulties = ['Nybörjare', 'Fortsättning', 'Avancerad']
-const fields = 'id,title,category,difficulty,steps,sketch,status,updated_at'
+const fields = 'id,title,category,steps,sketch,status,updated_at'
 
 type EditableExercise = {
   id: string
   title: string
   category: string
-  difficulty: string
   steps: string[]
   sketch: Sketch | null
   status: 'draft' | 'published'
@@ -43,23 +44,18 @@ export function AdminExercises({ client, onSave }: { client: SupabaseClient, onS
     return () => controller.abort()
   }, [client])
 
-  async function save(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+  async function save(draft: PublishedExercise, action?: string) {
     if (saving || !exercises) return
 
-    const form = new FormData(event.currentTarget)
-    const submitter = (event.nativeEvent as SubmitEvent).submitter
     let status = selected?.status ?? 'draft'
-    if (submitter instanceof HTMLButtonElement && submitter.value === 'publish') status = 'published'
-    if (submitter instanceof HTMLButtonElement && submitter.value === 'unpublish') status = 'draft'
-    const sketch: Sketch = JSON.parse(String(form.get('sketch')))
-    const hasSketch = sketch.points.length > 0 || sketch.arrows.length > 0
+    if (action === 'publish') status = 'published'
+    if (action === 'unpublish') status = 'draft'
+    const hasSketch = draft.sketch.points.length > 0 || draft.sketch.arrows.length > 0
     const values = {
-      title: String(form.get('title')).trim(),
-      category: String(form.get('category')),
-      difficulty: String(form.get('difficulty')),
-      steps: String(form.get('steps')).split(/\r?\n/).map((step) => step.trim()).filter(Boolean),
-      sketch: hasSketch || sketch.caption.trim() ? sketch : null,
+      title: draft.title,
+      category: draft.category,
+      steps: draft.steps,
+      sketch: hasSketch ? draft.sketch : null,
       status,
     }
     setMessage('')
@@ -121,37 +117,78 @@ export function AdminExercises({ client, onSave }: { client: SupabaseClient, onS
               ))}
             </select>
           </label>
-          <form className="admin-form" key={selectedId} onSubmit={save}>
-            <label>Titel<input name="title" defaultValue={selected?.title} required /></label>
-            <label>
-              Kategori
-              <select name="category" defaultValue={selected?.category} required>
-                {categories.map((category) => <option key={category}>{category}</option>)}
-              </select>
-            </label>
-            <label>
-              Svårighetsgrad
-              <select name="difficulty" defaultValue={selected?.difficulty} required>
-                {difficulties.map((difficulty) => <option key={difficulty}>{difficulty}</option>)}
-              </select>
-            </label>
-            <InstructionEditor client={client} initialText={selected?.steps.join('\n') ?? ''} />
-            <SketchEditor initialSketch={selected?.sketch} />
-            <div className="exercise-actions">
-              <button className="button" type="submit" disabled={saving}>
-                {selected?.status === 'published' ? 'Spara ändringar' : 'Spara utkast'}
-              </button>
-              {selected?.status === 'published' ? (
-                <button className="clear-throw-filter" type="submit" value="unpublish" disabled={saving}>Avpublicera</button>
-              ) : (
-                <button className="button" type="submit" value="publish" disabled={saving}>Publicera</button>
-              )}
-            </div>
-          </form>
+          <AdminExerciseForm key={selectedId} selected={selected} client={client} saving={saving} onSave={save} />
         </>
       )}
       {message && <p role="status">{message}</p>}
       {errorMessage && <p role="alert">{errorMessage}</p>}
+    </div>
+  )
+}
+
+function AdminExerciseForm({ selected, client, saving, onSave }: {
+  selected?: EditableExercise
+  client: SupabaseClient
+  saving: boolean
+  onSave: (draft: PublishedExercise, action?: string) => Promise<void>
+}) {
+  const [title, setTitle] = useState(selected?.title ?? '')
+  const [category, setCategory] = useState(selected?.category ?? categories[0])
+  const [steps, setSteps] = useState(() => selected?.steps.length
+    ? selected.steps.map(readStep)
+    : Array.from({ length: 3 }, () => readStep('')))
+  const [sketch, setSketch] = useState<Sketch>(() => ({
+    points: selected?.sketch?.points ?? [],
+    arrows: selected?.sketch?.arrows ?? [],
+  }))
+  const draft: PublishedExercise = {
+    id: selected?.id ?? '',
+    title: title.trim(),
+    category,
+    steps: steps.map(({ instruction, reminder }) => writeStep(instruction, reminder)).filter(Boolean),
+    sketch,
+  }
+
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const submitter = (event.nativeEvent as SubmitEvent).submitter
+    void onSave(draft, submitter instanceof HTMLButtonElement ? submitter.value : undefined)
+  }
+
+  return (
+    <div className="admin-exercise-workspace">
+      <form className="admin-form" onSubmit={submit}>
+        <div className="admin-exercise-fields">
+          <label>Titel<input name="title" value={title} onChange={(event) => setTitle(event.target.value)} required /></label>
+          <label>
+            Kategori
+            <select name="category" value={category} onChange={(event) => setCategory(event.target.value)} required>
+              {categories.map((option) => <option key={option}>{option}</option>)}
+            </select>
+          </label>
+        </div>
+        <SketchEditor sketch={sketch} setSketch={setSketch} />
+        <div className="admin-exercise-instructions">
+          <InstructionEditor client={client} steps={steps} onChange={setSteps} />
+        </div>
+        <div className="exercise-actions">
+          <button className="button" type="submit" disabled={saving}>
+            {selected?.status === 'published' ? 'Spara ändringar' : 'Spara utkast'}
+          </button>
+          {selected?.status === 'published' ? (
+            <button className="clear-throw-filter" type="submit" value="unpublish" disabled={saving}>Avpublicera</button>
+          ) : (
+            <button className="button" type="submit" value="publish" disabled={saving}>Publicera</button>
+          )}
+        </div>
+      </form>
+      <section className="admin-exercise-preview" aria-labelledby="exercise-preview-title">
+        <h4 id="exercise-preview-title">Förhandsvisning</h4>
+        <p>Så ser övningskortet ut medan du redigerar.</p>
+        <div className="exercise-card">
+          <ExerciseDetail exercise={{ ...draft, title: draft.title || 'Övningens titel' }} />
+        </div>
+      </section>
     </div>
   )
 }

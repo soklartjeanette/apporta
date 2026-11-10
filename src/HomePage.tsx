@@ -51,7 +51,7 @@ export function HomePage() {
               </svg>
             </div>
             <h3><a href="#ovningar">Hitta en övning</a></h3>
-            <p>Filtrera efter kategori, svårighetsgrad och med eller utan kast.</p>
+            <p>Filtrera efter kategori.</p>
           </article>
           <article>
             <div className="home-feature-art feature-sketch" aria-hidden="true">

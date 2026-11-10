@@ -1,25 +1,16 @@
-import { createClient, type Session } from '@supabase/supabase-js'
-import { useEffect, useState, type FormEvent } from 'react'
+import type { Session } from '@supabase/supabase-js'
+import { useState, type FormEvent } from 'react'
 import { AdminExercises } from './AdminExercises'
-import { supabaseKey, supabaseUrl } from './supabaseConfig'
+import { client } from './supabaseClient'
 
-const client = supabaseUrl && supabaseKey?.startsWith('sb_publishable_')
-  ? createClient(supabaseUrl, supabaseKey, { auth: { detectSessionInUrl: false } })
-  : null
-
-export function AdminLogin({ onExerciseSave }: { onExerciseSave: () => void }) {
-  const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(Boolean(client))
+export function AdminLogin({ session, loading, showAdmin, onExerciseSave }: {
+  session: Session | null
+  loading: boolean
+  showAdmin: boolean
+  onExerciseSave: () => void
+}) {
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
-
-  useEffect(() => {
-    const listener = client?.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession)
-      setLoading(false)
-    })
-    return () => listener?.data.subscription.unsubscribe()
-  }, [])
 
   async function signIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -63,15 +54,16 @@ export function AdminLogin({ onExerciseSave }: { onExerciseSave: () => void }) {
   }
 
   return (
-    <section className="library admin-panel" id="admin" aria-labelledby="admin-title">
-      <h2 id="admin-title">Administratörsinloggning</h2>
+    <section className="library admin-panel" aria-labelledby="account-title">
+      <h1 id="account-title">{showAdmin ? 'Administration' : session ? 'Mitt konto' : 'Logga in'}</h1>
       {!client && <p>Inloggningen är inte tillgänglig just nu.</p>}
       {loading && <p role="status">Kontrollerar inloggningen…</p>}
       {session && (
         <>
           <p role="status">Du är inloggad.</p>
           <button className="button" type="button" onClick={signOut} disabled={busy}>Logga ut</button>
-          {client && <AdminExercises key={session.user.id} client={client} onSave={onExerciseSave} />}
+          <p><a href="#ovningar">Till övningarna</a></p>
+          {showAdmin && client && <AdminExercises key={session.user.id} client={client} onSave={onExerciseSave} />}
         </>
       )}
       {client && !loading && !session && (

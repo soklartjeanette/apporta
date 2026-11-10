@@ -2,7 +2,6 @@ import { useId, type ComponentProps, type PointerEvent } from 'react'
 import { ditchWidth, hasCustomSketchSymbol, SketchSymbol } from './SketchSymbol'
 
 export type Sketch = {
-  caption: string
   points: { x: number; y: number; label: string }[]
   arrows: { from: number[]; to: number[]; dashed: boolean }[]
 }
@@ -21,7 +20,7 @@ export function ExerciseSketch({ sketch, svgProps, onGrab, selected }: {
 
   return (
     <figure className="exercise-sketch">
-      <svg viewBox="0 0 320 195" aria-hidden={!svgProps} {...svgProps}>
+      <svg viewBox="0 0 320 195" role="img" aria-label="Övningens skiss" {...svgProps}>
         <defs>
           <marker id={arrowId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
             <path d="M 0 0 L 10 5 L 0 10 Z" fill="currentColor" />
@@ -63,7 +62,6 @@ export function ExerciseSketch({ sketch, svgProps, onGrab, selected }: {
           )
         })}
       </svg>
-      {sketch.caption && <figcaption>{sketch.caption}</figcaption>}
     </figure>
   )
 }

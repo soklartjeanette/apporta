@@ -1,7 +1,7 @@
 :root {
   font-family: system-ui, sans-serif;
-  color: #29332b;
-  background: #f6f3eb;
+  color: var(--ink);
+  background: var(--paper);
   line-height: 1.6;
 }
 
@@ -60,7 +60,7 @@ a:focus-visible {
 h1, h2 {
   font-family: Georgia, serif;
   line-height: 1.1;
-  color: #233c2c;
+  color: var(--forest);
 }
 
 h1 {
@@ -73,25 +73,34 @@ h1 {
   display: inline-block;
   padding: 0.7rem 1.2rem;
   border-radius: 0.5rem;
-  background: #233c2c;
-  color: #fffaf0;
+  background: var(--forest);
+  color: #fff;
   font-weight: 700;
 }
 
 .button:focus-visible {
-  outline-color: #233c2c;
+  outline-color: var(--forest);
 }
 
 .library {
-  padding: clamp(1.25rem, 4vw, 2.5rem);
   margin-bottom: 3rem;
-  border: 1px solid #c9d1c2;
-  border-radius: 1rem;
-  background: #fffcf6;
 }
 
-.library h2 {
-  margin-top: 0;
+.library-hero {
+  padding: clamp(1.5rem, 5vw, 4rem);
+  border-bottom: 0.4rem solid var(--scarlet);
+  background: var(--forest);
+  color: #fff;
+}
+
+.library-hero h1 {
+  color: inherit;
+}
+
+.admin-panel {
+  padding: clamp(1rem, 4vw, 2.5rem);
+  border-top: 0.4rem solid var(--scarlet);
+  background: #fff;
 }
 
 .library p {
@@ -119,7 +128,7 @@ h1 {
   min-height: 2.75rem;
   padding: 0.5rem;
   border: 1px solid #758372;
-  border-radius: 0.5rem;
+  border-radius: 0.25rem;
   background: #fff;
   color: inherit;
   font: inherit;
@@ -127,7 +136,7 @@ h1 {
 }
 
 .exercise-filters :focus-visible {
-  outline: 2px solid #233c2c;
+  outline: 2px solid var(--forest);
   outline-offset: 2px;
 }
 
@@ -163,6 +172,17 @@ h1 {
 .instruction-steps textarea {
   width: 100%;
   vertical-align: top;
+}
+
+.instruction-reminder-field {
+  margin-block-start: 0.4rem;
+}
+
+.admin-form .instruction-reminder-field {
+  font-size: 0.9rem;
+  font-style: italic;
+  padding-block: 0.3rem;
+  resize: vertical;
 }
 
 .sketch-editor {
@@ -214,12 +234,12 @@ h1 {
 
 .sketch-actions button[aria-pressed="true"],
 .sketch-tools button[aria-pressed="true"] {
-  background: #233c2c;
-  color: #fffaf0;
+  background: var(--forest);
+  color: #fff;
 }
 
 .sketch-tools button[aria-pressed="true"] > svg {
-  background: #fffaf0;
+  background: #fff;
   border-radius: 0.25rem;
 }
 
@@ -241,12 +261,79 @@ h1 {
   margin-bottom: 0.75rem;
 }
 
-.admin-panel button {
+.admin-panel button:not(.favorite-button) {
   justify-self: start;
   margin-top: 0.5rem;
   border: 0;
   font: inherit;
   cursor: pointer;
+}
+
+.admin-exercise-workspace {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.admin-exercise-workspace > .admin-form {
+  max-width: none;
+  min-width: 0;
+  align-items: start;
+  gap: 1rem;
+}
+
+.admin-exercise-fields {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.admin-exercise-instructions {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+  justify-items: start;
+}
+
+.admin-exercise-instructions > div {
+  width: 100%;
+}
+
+.admin-exercise-instructions .instruction-steps {
+  margin-top: 0;
+}
+
+.admin-exercise-preview {
+  min-width: 0;
+  width: 100%;
+  max-width: 24rem;
+}
+
+.admin-exercise-preview > h4 {
+  margin: 0;
+  color: var(--forest);
+  font-size: 1.1rem;
+}
+
+.admin-exercise-preview > p {
+  margin: 0.25rem 0 0.75rem;
+  font-size: 0.9rem;
+}
+
+.admin-exercise-preview .favorite-button:disabled {
+  cursor: default;
+}
+
+@media (min-width: 48rem) {
+  .admin-exercise-workspace {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  }
+
+  .admin-exercise-preview {
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
 }
 
 .exercise-results {
@@ -255,41 +342,39 @@ h1 {
 
 .exercise-list {
   display: grid;
+  align-items: start;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
-  gap: 1rem;
+  gap: clamp(0.9rem, 2vw, 1.4rem);
   margin: 1.5rem 0 0;
   padding: 0;
   list-style: none;
 }
 
 .exercise-card {
-  padding: 1rem;
-  border: 1px solid #c9d1c2;
-  border-radius: 0.75rem;
+  min-width: 0;
+  padding: clamp(1.15rem, 2.5vw, 1.75rem);
+  background: #fff;
+  border: 1px solid #dde1da;
 }
 
-.exercise-meta {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-
-.exercise-meta p {
-  margin-top: 0;
-}
 
 .exercise-category {
-  font-size: 0.9rem;
-  font-weight: 700;
+  margin-top: 0;
+  color: var(--forest);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
 }
 
 .exercise-card h3 {
-  margin: 0.35rem 0 0.6rem;
-  font-family: Georgia, serif;
-  font-size: 1.35rem;
-  line-height: 1.25;
-  color: #233c2c;
+  margin: 0.4rem 0 0;
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-weight: 850;
+  letter-spacing: -0.04em;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+  color: var(--forest);
 }
 
 .exercise-heading {
@@ -297,6 +382,7 @@ h1 {
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .favorite-button {
@@ -307,7 +393,7 @@ h1 {
   border: 0;
   border-radius: 50%;
   background: transparent;
-  color: #233c2c;
+  color: var(--scarlet);
   cursor: pointer;
 }
 
@@ -318,19 +404,14 @@ h1 {
 
 .favorite-button::before {
   content: '';
-  width: 2rem;
-  height: 2rem;
-  border: 1px solid #c9d1c2;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid currentColor;
   border-radius: 50%;
 }
 
 .favorite-button:is(:hover, [aria-pressed="true"])::before {
-  border-color: #a75860;
-  background: #f7e9e9;
-}
-
-.favorite-button:is(:hover, [aria-pressed="true"]) {
-  color: #903847;
+  background: #ffd1ab;
 }
 
 .favorite-button:focus-visible {
@@ -338,18 +419,30 @@ h1 {
   outline-offset: 2px;
 }
 
-.exercise-card .exercise-difficulty {
-  flex-shrink: 0;
-  padding: 0.1rem 0.45rem;
-  border-radius: 0.5rem;
-  background: #eef1e9;
-  color: #505b50;
-  font-size: 0.75rem;
+.exercise-card ol {
+  margin-block: clamp(1rem, 2vw, 1.4rem) clamp(1.25rem, 2.5vw, 1.65rem);
+  padding-inline-start: 1.45rem;
 }
 
-.exercise-card article li {
-  max-width: 62ch;
-  margin-bottom: 0.4rem;
+.exercise-card ol li {
+  padding-inline-start: 0.2rem;
+}
+
+.exercise-card ol li + li {
+  margin-top: 0.5rem;
+}
+
+.exercise-card ol li::marker {
+  color: var(--forest);
+  font-weight: 800;
+}
+
+.exercise-step-reminder {
+  display: block;
+  margin-block-start: 0.25rem;
+  color: var(--forest);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .exercise-sketch {
@@ -362,9 +455,90 @@ h1 {
   width: 100%;
   border-radius: 0.75rem;
   background: #dfe8d8;
-  color: #233c2c;
+  color: var(--forest);
 }
 
-.exercise-sketch figcaption {
-  margin-top: 0.75rem;
+.exercise-note {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.9rem 1rem;
+  background: var(--paper);
+  border-left: 0.2rem solid var(--scarlet);
+}
+
+.exercise-note h4 {
+  margin: 0;
+  color: var(--forest);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.exercise-note p {
+  margin: 0;
+}
+
+.exercise-note-text {
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.note-edit {
+  padding: 0.3rem 0;
+  background: transparent;
+  color: var(--forest);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.note-retry {
+  margin-block-start: 1rem;
+}
+
+.note-retry p {
+  margin: 0;
+}
+
+.note-retry button {
+  border: 0;
+  font: inherit;
+}
+
+.exercise-note .button {
+  background: var(--scarlet);
+  color: #070908;
+  cursor: pointer;
+}
+
+.exercise-note form {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.exercise-note label {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.exercise-note textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #758372;
+  border-radius: 0.5rem;
+  font: inherit;
+  resize: vertical;
+}
+
+.exercise-note button {
+  justify-self: start;
+  border: 0;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+.exercise-note button:disabled {
+  opacity: 0.65;
 }

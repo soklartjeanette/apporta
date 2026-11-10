@@ -3,7 +3,7 @@ import type { Sketch } from './ExerciseSketch'
 import { supabaseUrl as url, supabaseKey as key } from './supabaseConfig'
 
 type Exercise = (typeof exercises)[number]
-export type PublishedExercise = Pick<Exercise, 'id' | 'title' | 'category' | 'difficulty' | 'steps'> & { sketch: Sketch }
+export type PublishedExercise = Pick<Exercise, 'id' | 'title' | 'category' | 'steps'> & { sketch: Sketch }
 
 export const hasSupabaseConfig = Boolean(url || key)
 
@@ -13,7 +13,7 @@ export async function loadExercises(signal: AbortSignal): Promise<PublishedExerc
   }
 
   const endpoint = new URL('/rest/v1/exercises', url)
-  endpoint.searchParams.set('select', 'id,title,category,difficulty,steps,sketch')
+  endpoint.searchParams.set('select', 'id,title,category,steps,sketch')
   endpoint.searchParams.set('status', 'eq.published')
   endpoint.searchParams.set('order', 'title.asc,id.asc')
 
