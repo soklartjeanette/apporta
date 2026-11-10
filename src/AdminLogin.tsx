@@ -3,7 +3,8 @@ import { useState, type FormEvent } from 'react'
 import { AdminExercises } from './AdminExercises'
 import { client } from './supabaseClient'
 
-export function AdminLogin({ session, loading, showAdmin, onExerciseSave }: {
+export function AdminLogin({ register = false, session, loading, showAdmin, onExerciseSave }: {
+  register?: boolean
   session: Session | null
   loading: boolean
   showAdmin: boolean
@@ -21,16 +22,17 @@ export function AdminLogin({ session, loading, showAdmin, onExerciseSave }: {
     setBusy(true)
     setMessage('')
     try {
-      const { error } = await client.auth.signInWithPassword({
+      const { error } = await client.auth[register ? 'signUp' : 'signInWithPassword']({
         email: String(data.get('email')).trim(),
         password: String(data.get('password')),
       })
       if (error) {
-        setMessage(error.code === 'invalid_credentials'
+        setMessage(register ? 'Det gick inte att skapa kontot. Kontrollera uppgifterna och försök igen.' : error.code === 'invalid_credentials'
           ? 'Mejladressen eller lösenordet stämmer inte.'
           : 'Det gick inte att logga in. Försök igen.')
       } else {
         form.reset()
+        if (register) setMessage('Kontoförfrågan är skickad. Om mejladressen kan registreras får du ett mejl med nästa steg.')
       }
     } catch {
       setMessage('Det gick inte att logga in. Försök igen.')
@@ -55,7 +57,7 @@ export function AdminLogin({ session, loading, showAdmin, onExerciseSave }: {
 
   return (
     <section className="library admin-panel" aria-labelledby="account-title">
-      <h1 id="account-title">{showAdmin ? 'Administration' : session ? 'Mitt konto' : 'Logga in'}</h1>
+      <h1 id="account-title">{showAdmin ? 'Administration' : session ? 'Mitt konto' : register ? 'Skapa gratis konto' : 'Logga in'}</h1>
       {!client && <p>Inloggningen är inte tillgänglig just nu.</p>}
       {loading && <p role="status">Kontrollerar inloggningen…</p>}
       {session && (
@@ -74,9 +76,10 @@ export function AdminLogin({ session, loading, showAdmin, onExerciseSave }: {
           </label>
           <label>
             Lösenord
-            <input name="password" type="password" autoComplete="current-password" required />
+            <input name="password" type="password" autoComplete={register ? "new-password" : "current-password"} minLength={register ? 6 : undefined} required />
           </label>
-          <button className="button" type="submit" disabled={busy}>{busy ? 'Loggar in…' : 'Logga in'}</button>
+          <button className="button" type="submit" disabled={busy}>{busy ? 'Vänta…' : register ? 'Skapa gratis konto' : 'Logga in'}</button>
+          <p><a href={register ? "#logga-in" : "#skapa-konto"}>{register ? "Har du redan ett konto? Logga in" : "Skapa gratis konto"}</a></p>
         </form>
       )}
       {message && <p role="alert">{message}</p>}

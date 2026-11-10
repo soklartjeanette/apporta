@@ -6,7 +6,9 @@ Jag går en kurs i AI-driven programmering av webbappar på Folkuniversitetet.
 
 Mitt projekt är att utveckla en webbapp för jaktapportering med retriever.
 
-Projektet och projektmappen ska heta **Apporta**. Använd namnet konsekvent i gränssnitt, sidtitel och dokumentation. Använd Apportas logotyp med hunden och den röda apporten. **Din digitala övningsbank** kan användas som undertitel.
+Startsidan ska ha huvudrubriken **Ditt eget träningsbibliotek** och övertexten **För dig som tränar jaktapportering**. Anpassa rubrikens bredd och textstorlek till skärmen så att hela ord hålls ihop; ”träningsbibliotek” får inte brytas mitt i ordet. Huvudknappen ska heta **Logga in** och leda till inloggningen. Ingen Om-sida ska ingå. Visa inte avsnittet ”Inför nästa pass” med de tre korten på startsidan.
+
+Projektet och projektmappen ska heta **Apporta**. Använd namnet konsekvent i gränssnitt, sidtitel och dokumentation. Använd en kraftig svart textlogotyp APPORTA med orange punkt, enligt den valda Lovable-referensen. **Din digitala övningsbank** kan användas som undertitel.
 
 Prioritera korta namn och webbadresser som faller naturligt i tal och är lätta att komma ihåg efter att ha hört dem en gång.
 
@@ -53,7 +55,7 @@ På längre sikt kan appen utvecklas så att andra användare kan skapa och dela
 
 ## Övningar
 
-- Kalla avsnittet och menylänken **Övningar**. Lägg **Alla rutor** och **Mina rutor** i rullistan **Visa** och förvälj **Alla rutor**. Förvälj **Alla kategorier** i kategorifiltret.
+- Kalla avsnittet och länken i sidfoten **Övningar**. Lägg **Alla rutor** och **Mina rutor** i rullistan **Visa** och förvälj **Alla rutor**. Förvälj **Alla kategorier** i kategorifiltret.
 - Ge favorithjärtat en liten symbol och en diskret ring, båda i klarrött (#F00030). Använd en tydligt ljusorange bakgrund (#FFD1AB) vid markering och hovring. Behåll en generös tryckyta på mobilen.
 - Besökare ska kunna spara valfria publicerade rutor som favoriter genom att trycka på ett hjärta, oavsett vem som har skapat övningen. Ett fyllt hjärta visar att rutan är sparad. Tryck igen för att ta bort favoriten.
 - **Mina rutor** visar besökarens sparade, publicerade rutor. Favoriter sparas i den aktuella webbläsaren utan konto i första versionen. Filtren i **Alla rutor** påverkar inte **Mina rutor**.
@@ -149,7 +151,7 @@ Grundfunktionerna ska fungera utan AI. Inför AI-funktionerna när grundappen fu
 
 ## Design
 
-Använd den valda hundlogotypen i sidhuvudet mot en ljus bakgrund. Behåll originalfilens utseende, transparens och proportioner. Anpassa visningsstorleken för mobil och dator.
+Använd textlogotypen APPORTA med orange punkt i sidhuvudet mot ljus bakgrund. Visa Logga in med en vit kontosymbol i en svart cirkel. På öppningsbilden ska Logga in och Skapa gratis konto vara helt rundade knappar: en ljus fylld och en genomskinlig med ljus kant.
 
 Färgschema för startsidan och övningsbanken: kombinera djup jaktgrön (#102E23) med klar flanellröd (#F00030). Prova rött i en större färgyta och i en tydlig detalj i logotypen. Använd nästan vit bakgrund (#F9F9F7), vita kort och nästan svart text (#171C18).
 
@@ -159,7 +161,7 @@ Ge tydligt mellanrum mellan skissen, instruktionerna och noteringsrutan. Håll i
 
 Bedöm storlek, linjering och mellanrum tillsammans från början när du lägger till eller ändrar en komponent. Se hur den samspelar med närliggande rubriker, etiketter och knappar på smala och breda skärmar. Låt gärna tryckytan vara större än den synliga knappen.
 
-Startsidan har en bred öppning med jaktapportering, följd av ”Så funkar det” med bild bredvid kort text, tre visuella kort i rad på breda skärmar och en enkel sidfot. Använd generösa mellanrum och låt blocken staplas på mobil. Visa en stillbild tills det finns en öppningsfilm. Övningarna ligger i en egen vy som nås från huvudmenyn och startsidans huvudknapp.
+Startsidan har en bred öppning med jaktapportering, följd av ”Så funkar det” med bild bredvid kort text och en enkel sidfot. Använd generösa mellanrum och låt blocken staplas på mobil. Visa en stillbild tills det finns en öppningsfilm. Övningarna ligger i en egen vy som nås från kategorikorten, sidfoten och länken i ”Så funkar det”.
 
 Appen ska ha en modern, stilren och naturnära design.
 
@@ -178,3 +180,19 @@ Undvik röriga menyer, onödiga funktioner och för många klick.
 - Egna träningsupplägg som kombinerar flera övningar och som instruktörer på sikt kan dela.
 - AI-assistent.
 - Möjlighet för andra användare att bidra.
+
+Startsidan ska visa mörkgröna kategorikort med rundade hörn, nummer, pil, kraftig versalrubrik, kort förklaring och orange övningsantal. Använd befintliga kategorier och verkliga antal publicerade övningar. Korten öppnar övningsbanken med vald kategori. Skapa gratis konto leder till registrering via Supabase.
+
+Sidhuvudet ska endast visa logotyp och kontolänk; visa inte Övningar eller Så funkar det där. Logotypens bokstäver ska ha luftigare mellanrum utan negativt bokstavsavstånd. Sidfoten följer Lovable-referensen: nästan svart bakgrund (#0D0F0A), stor ljus logotyp med orange punkt, beskrivning till vänster, länkarna Övningar, Favoriter, Konto och Admin till höger samt en avdelande linje ovanför copyright. Anpassa layouten till mobil.
+
+## Beslutad text under Så funkar det
+
+### Kom ihåg dina övningar och upplägg
+
+En ny utmaning eller en favorit i repris? Utforska träningsbiblioteket och plocka ihop ett pass för dig och din hund. Varje övning har tydliga instruktioner och en skiss som gör det enkelt att komma igång.
+
+Har ni gjort en rolig övning på träningen? Lägg in den här så att du enkelt hittar den igen. Behåll den för dig själv eller dela den med andra – din övning kan bli någon annans nya favorit.
+
+Texten är beslutad startsidestext. Den innebär inte att framtida funktioner för egna privata eller delade övningar ska byggas nu.
+
+Sidfoten ska endast ha beskrivningen ”Övningsbiblioteket för jaktapportering med retrievers och spaniels.” och copyright med årtal och Apporta. Utelämna texterna om att vara byggt i Sverige, gratis tillgång för svenska hundförare och en kommande engelsk version.

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { createRoot } from 'react-dom/client'
 import { AdminLogin } from './AdminLogin'
-import logo from './assets/apporta-logotyp.png'
 import { ExerciseDetail } from './ExerciseDetail'
 import { HomePage } from './HomePage'
 import { exercises } from './exercises'
@@ -82,7 +81,7 @@ function App() {
   const [hash, setHash] = useState(() => window.location.hash)
   const isExerciseView = exerciseHashes.includes(hash)
   const isAdminView = hash === '#admin' && hasSupabaseConfig
-  const isAccountView = hash === '#logga-in' && hasSupabaseConfig
+  const isAccountView = hash === '#logga-in' || hash === '#skapa-konto'
   const isHome = !isExerciseView && !isAdminView && !isAccountView
   const [session, setSession] = useState<Session | null>(null)
   const [loadingSession, setLoadingSession] = useState(Boolean(client))
@@ -118,7 +117,7 @@ function App() {
     }
   }
 
-  const categories = [...new Set([...availableExercises.map((exercise) => exercise.category), 'Ringträning'])]
+  const categories = [...new Set([...availableExercises.map((exercise) => exercise.category), 'Markering', 'Dirigering och linjetag', 'Sök och närsök', 'Stadga och passivitet', 'Stoppsignal', 'Vattenarbete', 'Ringträning'])]
   const matches = availableExercises.filter((exercise) =>
     (!category || exercise.category === category)
   )
@@ -156,18 +155,16 @@ function App() {
     <>
       <header className="site-header">
         <div className="container header-content">
-          <a href="#start"><img className="site-logo" src={logo} alt="Apporta – startsida" width={2172} height={724} /></a>
+          <a className="wordmark" href="#start" aria-label="Apporta – startsida">APPORTA<span aria-hidden="true">.</span></a>
           <nav className="site-nav" aria-label="Huvudmeny">
-            <a href="#ovningar" aria-current={isExerciseView ? 'page' : undefined}>Övningar</a>
-            <a href="#sa-funkar-det">Så funkar det</a>
-            {hasSupabaseConfig && <a href="#logga-in" aria-current={isAccountView ? 'page' : undefined}>
-              {session ? 'Mitt konto' : 'Logga in'}
-            </a>}
+            <a className="account-link" href="#logga-in" aria-current={isAccountView ? 'page' : undefined}>
+              <span className="account-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><circle cx="12" cy="8" r="3"/><path d="M5 21v-3a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v3"/></svg></span>{session ? 'Mitt konto' : 'Logga in'}
+            </a>
           </nav>
         </div>
       </header>
       <main className={isHome ? undefined : 'container inner-page'}>
-        {isHome && <HomePage />}
+        {isHome && <HomePage items={availableExercises} loadStatus={loadStatus} onCategory={(value) => { setCategory(value); setShowFavorites(false) }} />}
         {isExerciseView && <>
         {favoriteStorageError && <p role="alert">Webbläsaren kunde inte spara dina favoriter. De finns kvar tills du laddar om sidan.</p>}
 
@@ -207,17 +204,26 @@ function App() {
             onFavorite={toggleFavorite} userId={session?.user.id} checkingAccount={loadingSession} />
         </section>
         </>}
-        {(isAdminView || isAccountView) && <AdminLogin session={session} loading={loadingSession}
+        {(isAdminView || isAccountView) && <AdminLogin key={hash} register={hash === '#skapa-konto'} session={session} loading={loadingSession}
           showAdmin={isAdminView} onExerciseSave={() => setExerciseVersion((version) => version + 1)} />}
       </main>
       <footer className="site-footer">
         <div className="container footer-content">
-          <a href="#start">Apporta</a>
-          <nav className="site-nav" aria-label="Sidfot">
-            <a href="#ovningar">Övningar</a>
-            <a href="#sa-funkar-det">Så funkar det</a>
-            {hasSupabaseConfig && <a href="#admin">Admin</a>}
-          </nav>
+          <div className="footer-main">
+            <div className="footer-brand">
+              <a className="wordmark" href="#start" aria-label="Apporta – startsida">APPORTA<span aria-hidden="true">.</span></a>
+              <p>Övningsbiblioteket för jaktapportering med retrievers och spaniels.</p>
+            </div>
+            <nav className="footer-nav" aria-label="Sidfot">
+              <a href="#ovningar" onClick={() => { setCategory(''); setShowFavorites(false) }}>Övningar</a>
+              <a href="#mina-rutor" onClick={() => setShowFavorites(true)}>Favoriter</a>
+              <a href="#logga-in">Konto</a>
+              {hasSupabaseConfig && <a href="#admin">Admin</a>}
+            </nav>
+          </div>
+          <div className="footer-bottom">
+            <p>© {new Date().getFullYear()} Apporta.</p>
+          </div>
         </div>
       </footer>
     </>
